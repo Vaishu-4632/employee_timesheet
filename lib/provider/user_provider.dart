@@ -1,40 +1,70 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class UserProvider extends ChangeNotifier {
   User? user;
-  String? nameController;
-  int? ageController;
+  String? name;
+  String? age;
   String? selectGender;
   String? selectDepartment;
 
-  UserProvider({this.nameController, this.ageController, this.selectGender, this.selectDepartment});
+  UserProvider({this.name, this.age, this.selectGender, this.selectDepartment});
+  TextEditingController nameController = TextEditingController();
+    TextEditingController ageController = TextEditingController();
+  final List<String> gender = ['Male', 'Female', 'Other'];
+  final List<String> department = ['Development', 'Management', 'CXO'];
+
 
   // Store data in Firebase
-  Future<void> storeData() async {
+  Future<void> storeData(name,age,selectGender,selectDepartment) async {
     User user = await FirebaseAuth.instance.currentUser!;
-    FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-      'name': nameController,
-      'age': ageController,
+    FirebaseFirestore.instance.collection('user').doc(user.uid).set({
+      'name': name,
+      'age': age,
       'gender': selectGender,
       'department': selectDepartment,
     });
+    notifyListeners();
   }
 
   // Retrieve data from Firebase
   Future<void> getData() async {
-    User? user = await FirebaseAuth.instance.currentUser!;
-    DocumentSnapshot doc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
+    
+  //   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  //   CollectionReference ref = firestore.collection('user');
+    
+  //   ref.get().then((QuerySnapshot snapshot) {
+  //     snapshot.docs.forEach((DocumentSnapshot doc) {
+  // Map<String, dynamic> details = ref as Map<String, dynamic> ;
+  // name = details['name'];
+  // age = details['age'];
+  // selectGender = details['gender'];
+  // selectDepartment = details['department'];
+  //       notifyListeners();
+  //      });
+  //   });
+    User? user = await FirebaseAuth.instance.currentUser;
+
+    DocumentSnapshot res = await FirebaseFirestore.instance
+        .collection('user')
+        .doc(user!.uid)
         .get();
-    Map<String, dynamic> details = doc.data() as Map<String, dynamic>;
-    nameController = details['name'];
-    ageController = details['age'];
+        if(res.data() != null){
+          
+    Map<String, dynamic> details = res.data() as Map<String, dynamic> ;
+    print(details);
+    nameController.text = details['name'];
+    ageController.text = details['age'];
     selectGender = details['gender'];
     selectDepartment = details['department'];
+        }
+        // print(res);
+        notifyListeners();
   }
+
+ 
 }
 
 

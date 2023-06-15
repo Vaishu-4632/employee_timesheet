@@ -46,6 +46,7 @@ TextFormField reusableTextField(
     cursorColor: Colors.white,
     textInputAction:
         isPasswordType ? TextInputAction.done : TextInputAction.next,
+    onSaved: (value) => value = value,
 
     style: TextStyle(color: Colors.white.withOpacity(0.9)),
     decoration: InputDecoration(
@@ -67,6 +68,7 @@ TextFormField reusableTextField(
     keyboardType: isPasswordType
         ? TextInputType.visiblePassword
         : TextInputType.emailAddress,
+        
   );
 }
 

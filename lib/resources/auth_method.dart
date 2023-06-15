@@ -7,8 +7,8 @@ class AuthMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<String> profileDetails({
-    required String nameController,
-    required int ageController,
+    required String name,
+    required int age,
     required String selectGender,
     required String selectDepartment,
     required String imageUrl,
@@ -18,11 +18,11 @@ class AuthMethods {
   }) async {
     String resp = "Some error occured";
     try {
-      if (email.isNotEmpty || password.isNotEmpty || nameController.isNotEmpty) {
+      if (email.isNotEmpty || password.isNotEmpty || name.isNotEmpty) {
         UserCredential credential = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
         UserData userData = UserData(
-            nameController: nameController, ageController: ageController, selectGender: selectGender, selectDepartment: selectDepartment);
+            name: name, age: age, selectGender: selectGender, selectDepartment: selectDepartment);
         // UserData userData =UserData(username: username, email: email, password: password, uid: credential.user!.uid);
         await _firestore
             .collection('UserData')

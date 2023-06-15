@@ -1,8 +1,7 @@
-import 'package:employee_timesheet/Screens/Sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:employee_timesheet/Screens/Calendar.dart';
+import 'package:employee_timesheet/Screens/Profile_screen.dart';
+import 'package:employee_timesheet/Screens/TodayScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,21 +11,73 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int currentIndex = 0;
+  List<IconData> navigationIcons =[
+    Icons.calendar_month,
+    Icons.check,
+    Icons.person
+  ];
   @override
   Widget build(BuildContext context) {
+    
+   
     return Scaffold(
-      body: Center(
-        child: ElevatedButton(child: Text("Logout"),
-        onPressed: (){
-          FirebaseAuth.instance.signOut().then((value) {
-            print("Signed Out");
-            Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const SigninScreen()));
-          });
-          
-        },
-        ),
+      
+      body: 
+      IndexedStack(
+        index: currentIndex,
+        children: [
+          CalenderScreen(),
+          TodayScreen(),
+          ProfileScreen(),
+        ],
       ),
-    );
+        bottomNavigationBar: Container(
+        height: 70,
+        decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 215, 171, 223),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              blurRadius: 20,
+              offset: Offset(2, 2)
+            )
+          ]
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(40)),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for(int i = 0; i < navigationIcons.length;i++)...<Expanded>{
+              Expanded(
+                child: 
+                GestureDetector(
+                  onTap: (){
+                    setState(() {
+                      currentIndex = i;
+                    });
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                      child: Icon(navigationIcons[i],
+                      color: i == currentIndex ? Colors.white : Colors.black,
+                      size: i == currentIndex ? 35 : 30,
+                      ),
+                      
+                                  ),
+                    ],
+                  ),
+                ),),}
+            ],
+          ),
+        ) ,
+      ),
+        
+      );
+    
   }
 }

@@ -1,3 +1,4 @@
+import 'package:employee_timesheet/Screens/HomeScreen.dart';
 import 'package:employee_timesheet/Screens/Profile_screen.dart';
 import 'package:employee_timesheet/Screens/User_Profile.dart';
 import 'package:employee_timesheet/Widgets/reusable_widgets.dart';
@@ -30,7 +31,7 @@ class _SigninScreenState extends State<SigninScreen> {
       User? user = await FirebaseAuth.instance.currentUser;
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => ProfileScreen(),
+          builder: (context) => const ProfileScreen(),
         ),
       );
     }
@@ -91,7 +92,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                                       MultiProvider(providers: [
                                                          ChangeNotifierProvider(create: (context) => UserProvider(),)
                                                       ],
-                                                      builder: (context, child) => ProfileScreen(),
+                                                      builder: (context, child) => HomeScreen(),
                                                       ),
                                                 ),
                                               );

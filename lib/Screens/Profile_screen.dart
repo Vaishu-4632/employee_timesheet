@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:employee_timesheet/Screens/User_Profile.dart';
 import 'package:employee_timesheet/Widgets/reusable_widgets.dart';
 import 'package:employee_timesheet/Screens/HomeScreen.dart';
 import 'package:employee_timesheet/provider/user_provider.dart';
@@ -9,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,12 +19,10 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String? selectGender;
-  final List<String> gender = ['Male', 'Female', 'Other'];
-  String? selectDepartment;
-  final List<String> _department = ['Development', 'Management', 'CXO'];
-    TextEditingController ageController = TextEditingController();
-    TextEditingController nameController = TextEditingController();
+  // String? selectGender;
+  // final List<String> gender = ['Male', 'Female', 'Other'];
+  // String? selectDepartment;
+  // final List<String> department = ['Development', 'Management', 'CXO'];
 
   bool _isProcessing = false;
   final _detailFormKey = GlobalKey<FormState>();
@@ -32,23 +32,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? _imageUrl;
   @override
   void initState() {
-    storeData();
-    getData();
-    
-    super.initState();
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-  }
-  // updateData() async{
-  //   userProvider = Provider.of(context,listen : false);
-  //   await userProvider?.refreshUser();
-  //  }
-  //  Future<UserData> getProfileDetails()async{
-  //   User currentUser = _auth.currentUser!;
-  //   DocumentSnapshot snap = await _firestore.collection('UserData').doc(currentUser.uid).get();
-  //   return UserData.fromSnap(snap);
-    
-  // }
+    // FirebaseFirestore firestore = FirebaseFirestore.instance;
+    // CollectionReference usersRef = firestore.collection('users');
+    // usersRef.get().then((QuerySnapshot snapshot) {
+    //   snapshot.docs.forEach((DocumentSnapshot doc) {
+    //      Provider.of<UserProvider>(context,listen: false).getData();
+    //    });
+    // });
+    Provider.of<UserProvider>(context, listen: false).getData();
 
+    // .then((data) {
+    //   setState(() {
+    //     // users = data;
+    //   });
+    // });
+
+    //  Provider.of<UserProvider>(context,listen: false).storeData();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +83,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           child: Consumer<UserProvider>(
-            builder: (context, userProvider, child) {
-              User? user = userProvider.user;
+            builder: (context, userprovider, child) {
+              User? user = userprovider.user;
 
               return SingleChildScrollView(
                 child: Padding(
@@ -109,14 +111,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Column(
                           children: <Widget>[
                             reusableTextField(
-                                "Full Name",
-                                Icons.person_outlined,
-                                false,
-                                false,
-                                true,
-                                false,
-                                nameController,
-                                "fullName"),
+                              "Full Name",
+                              Icons.person_outlined,
+                              false,
+                              false,
+                              true,
+                              false,
+                              userprovider.nameController,
+                              "name",
+                            ),
                             const SizedBox(
                               height: 16,
                             ),
@@ -127,35 +130,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 false,
                                 false,
                                 true,
-                                ageController,
+                                userprovider.ageController,
                                 "age"),
                             const SizedBox(height: 18.0),
                             dropDown(
                                 context,
                                 "Gender",
-                                gender ,
+                                Provider.of<UserProvider>(context).gender,
                                 Icons.person_outline,
-                                selectGender, (newValue) {
+                                userprovider.selectGender, (newValue) {
                               setState(() {
-                                selectGender = newValue;
+                                userprovider.selectGender = newValue;
                               });
                             }),
                             const SizedBox(
                               height: 16,
                             ),
-                            dropDown(context, "Department", _department,
-                                Icons.work, selectDepartment, (newValue) {
+                            dropDown(
+                                context,
+                                "Department",
+                                Provider.of<UserProvider>(context).department,
+                                Icons.work,
+                                userprovider.selectDepartment, (newValue) {
                               setState(() {
-                                selectDepartment = newValue;
+                                userprovider.selectDepartment = newValue;
                               });
                             }),
                             const SizedBox(height: 24.0),
                             button(context, "Save", () async {
-                              storeData();
-                              
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .storeData(
+                                      userprovider.nameController.text,
+                                      userprovider.ageController.text,
+                                      userprovider.selectGender,
+                                      userprovider.selectDepartment)
+                                  .then((value) => print(
+                                      "Employee Details added Successfully"))
+                                  .catchError((error) => print(
+                                      "Employee Details Couldn't be added"));
+
+                              //  Provider.of<UserProvider>(context,listen: false).getData(nameController.text,ageController.text,selectGender,selectDepartment);
+                              //  notify
 
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const HomeScreen()));
+                                  builder: (context) => HomeScreen()));
                               // print(ref);
                               // }
                             }),
@@ -171,28 +189,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
-  }
-  
-  Future<void> getData() async {
-    User? user = await FirebaseAuth.instance.currentUser!;
-    DocumentSnapshot doc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get();
-    Map<String, dynamic> details = doc.data() as Map<String, dynamic>;
-    nameController = details['name'];
-    ageController = details['age'];
-    selectGender = details['gender'];
-    selectDepartment = details['department'];
-  }
-  Future<void> storeData() async {
-    User user = await FirebaseAuth.instance.currentUser!;
-    FirebaseFirestore.instance.collection('UserData').doc(user.uid).set({
-      'name': nameController,
-      'age': ageController,
-      'gender': selectGender,
-      'department': selectDepartment,
-    });
   }
 
   takePhoto(ImageSource source) async {
@@ -319,7 +315,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-  
 }
 
 
