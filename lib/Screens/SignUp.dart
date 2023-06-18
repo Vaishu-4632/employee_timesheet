@@ -1,10 +1,14 @@
 import 'package:employee_timesheet/Widgets/reusable_widgets.dart';
 import 'package:employee_timesheet/Screens/HomeScreen.dart';
 import 'package:employee_timesheet/Screens/Profile_screen.dart';
+import 'package:employee_timesheet/provider/user_provider.dart';
 import 'package:employee_timesheet/resources/auth_method.dart';
 import 'package:employee_timesheet/utils/background.dart';
+import 'package:employee_timesheet/utils/fire_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 
 import 'Sign_in.dart';
 
@@ -99,10 +103,33 @@ class _SignupScreenState extends State<SignupScreen> {
                   button(
                     context,
                     "Sign Up",
-                    () {
+                    () async {
                       FocusScope.of(context).requestFocus(FocusNode());
-                      registerUser();
-                    },
+                       User? user = await FireAuth.registerUsingEmailPassword(
+                                              email: _emailController.text,
+                                              password:
+                                                  _passwordController.text, name: _fullNameController.text,
+                                            );
+                                            print(user);
+                                            setState(() {
+                                              _isProcessing = false;
+                                            });
+
+                                            if (user != null) {
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MultiProvider(providers: [
+                                                         ChangeNotifierProvider(create: (context) => UserProvider(),)
+                                                      ],
+                                                      builder: (context, child) => ProfileScreen(),
+                                                      ),
+                                                ),
+                                              );
+                                            }
+                    }
+    
                   )
                 ],
               ),

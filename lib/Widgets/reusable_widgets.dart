@@ -127,7 +127,7 @@ showLoaderDialog(BuildContext context) {
 }
 
 dropDown(context, String labelText, List<String> itemsList, IconData icon,
-    value, onChanged) {
+    value, onChanged,hint) {
   return Container(
     child: FormField(
       enabled: true,
@@ -153,11 +153,11 @@ dropDown(context, String labelText, List<String> itemsList, IconData icon,
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton(
-              dropdownColor: Colors.transparent,
+              dropdownColor: Color.fromARGB(255, 69, 36, 75),
               isExpanded: true,
               value: value,
               onChanged: onChanged,
-
+              hint: Text(hint, style: TextStyle( color: Colors.white.withOpacity(0.9),),),
               items: itemsList.map((option) {
                 return DropdownMenuItem(
                   value: option,

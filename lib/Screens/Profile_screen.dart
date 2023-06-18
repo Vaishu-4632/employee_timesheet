@@ -142,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               setState(() {
                                 userprovider.selectGender = newValue;
                               });
-                            }),
+                            }, "Gender"),
                             const SizedBox(
                               height: 16,
                             ),
@@ -155,7 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               setState(() {
                                 userprovider.selectDepartment = newValue;
                               });
-                            }),
+                            }, "Department"),
                             const SizedBox(height: 24.0),
                             button(context, "Save", () async {
                               Provider.of<UserProvider>(context, listen: false)

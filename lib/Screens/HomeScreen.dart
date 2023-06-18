@@ -13,8 +13,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
   List<IconData> navigationIcons =[
-    Icons.calendar_month,
     Icons.check,
+    Icons.calendar_month,
     Icons.person
   ];
   @override
@@ -27,8 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
       IndexedStack(
         index: currentIndex,
         children: [
-          CalenderScreen(),
           TodayScreen(),
+          CalenderScreen(),
           ProfileScreen(),
         ],
       ),
