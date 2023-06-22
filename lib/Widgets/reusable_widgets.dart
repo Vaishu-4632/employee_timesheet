@@ -37,7 +37,8 @@ TextFormField reusableTextField(
             ? Validator.validateEmail(email: value)
             : (isAgeType
                 ? Validator.validateAge(age: value)
-                : Validator.validateName(name: value))),
+                : Validator.validateName(name: value)) ) ,
+                
     // validator: (value) =>
     //   isPasswordType ? Validator.validatePassword(password: value) : Validator.validateEmail(email: value),
     obscureText: isPasswordType,

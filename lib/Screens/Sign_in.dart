@@ -1,6 +1,5 @@
 import 'package:employee_timesheet/Screens/HomeScreen.dart';
 import 'package:employee_timesheet/Screens/Profile_screen.dart';
-import 'package:employee_timesheet/Screens/User_Profile.dart';
 import 'package:employee_timesheet/Widgets/reusable_widgets.dart';
 import 'package:employee_timesheet/Screens/SignUp.dart';
 import 'package:employee_timesheet/Screens/reset_password.dart';
@@ -75,29 +74,28 @@ class _SigninScreenState extends State<SigninScreen> {
                 forgotPassword(context),
                 button(context, "Sign In", () async {
                   User? user = await FireAuth.signInUsingEmailPassword(
-                                              email: _emailController.text,
-                                              password:
-                                                  _passwordController.text,
-                                            );
-                                            print(user);
-                                            setState(() {
-                                              _isProcessing = false;
-                                            });
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                  );
+                  print(user);
+                  setState(() {
+                    _isProcessing = false;
+                  });
 
-                                            if (user != null) {
-                                              Navigator.of(context)
-                                                  .pushReplacement(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      MultiProvider(providers: [
-                                                         ChangeNotifierProvider(create: (context) => UserProvider(),)
-                                                      ],
-                                                      builder: (context, child) => HomeScreen(),
-                                                      ),
-                                                ),
-                                              );
-                                            }
-              
+                  if (user != null) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => MultiProvider(
+                          providers: [
+                            ChangeNotifierProvider(
+                              create: (context) => UserProvider(),
+                            )
+                          ],
+                          builder: (context, child) => HomeScreen(),
+                        ),
+                      ),
+                    );
+                  }
                 }),
                 const SizedBox(
                   height: 20,

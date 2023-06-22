@@ -1,4 +1,8 @@
+
+import 'package:flutter/material.dart';
+
 class Validator {
+
   static String? validateName({required String? name}) {
     if (name == null) {
       return null;
@@ -49,7 +53,8 @@ class Validator {
     } else if (password.length < 6) {
       return 'Enter a password with length at least 6';
     }
-
+    
+    
     return null;
   }
 

@@ -1,5 +1,4 @@
 import 'package:employee_timesheet/Widgets/reusable_widgets.dart';
-import 'package:employee_timesheet/Screens/HomeScreen.dart';
 import 'package:employee_timesheet/Screens/Profile_screen.dart';
 import 'package:employee_timesheet/provider/user_provider.dart';
 import 'package:employee_timesheet/resources/auth_method.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
-import 'Sign_in.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -24,9 +22,6 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _fullNameController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _genderController = TextEditingController();
-  final TextEditingController _departmentController = TextEditingController();
   bool _isProcessing = false;
 
   @override
@@ -121,7 +116,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       MultiProvider(providers: [
-                                                         ChangeNotifierProvider(create: (context) => UserProvider(),)
+                                                         ChangeNotifierProvider<UserProvider>(create: (context) => UserProvider(),)
                                                       ],
                                                       builder: (context, child) => ProfileScreen(),
                                                       ),

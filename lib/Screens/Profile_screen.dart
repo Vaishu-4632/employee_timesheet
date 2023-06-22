@@ -19,10 +19,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // String? selectGender;
-  // final List<String> gender = ['Male', 'Female', 'Other'];
-  // String? selectDepartment;
-  // final List<String> department = ['Development', 'Management', 'CXO'];
+ 
 
   bool _isProcessing = false;
   final _detailFormKey = GlobalKey<FormState>();
@@ -32,24 +29,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? _imageUrl;
   @override
   void initState() {
-    // FirebaseFirestore firestore = FirebaseFirestore.instance;
-    // CollectionReference usersRef = firestore.collection('users');
-    // usersRef.get().then((QuerySnapshot snapshot) {
-    //   snapshot.docs.forEach((DocumentSnapshot doc) {
-    //      Provider.of<UserProvider>(context,listen: false).getData();
-    //    });
-    // });
-    Provider.of<UserProvider>(context, listen: false).getData();
+   
+ super.initState();
+        Provider.of<UserProvider>(context, listen: false).getData();
 
-    // .then((data) {
-    //   setState(() {
-    //     // users = data;
-    //   });
-    // });
-
-    //  Provider.of<UserProvider>(context,listen: false).storeData();
-
-    super.initState();
   }
 
   @override
@@ -83,9 +66,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           child: Consumer<UserProvider>(
-            builder: (context, userprovider, child) {
+            builder: (contextInner , userprovider, child) {
               User? user = userprovider.user;
-
               return SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.only(
@@ -136,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             dropDown(
                                 context,
                                 "Gender",
-                                Provider.of<UserProvider>(context).gender,
+                                userprovider.gender,
                                 Icons.person_outline,
                                 userprovider.selectGender, (newValue) {
                               setState(() {
@@ -149,7 +131,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             dropDown(
                                 context,
                                 "Department",
-                                Provider.of<UserProvider>(context).department,
+                                userprovider.department,
                                 Icons.work,
                                 userprovider.selectDepartment, (newValue) {
                               setState(() {
@@ -158,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             }, "Department"),
                             const SizedBox(height: 24.0),
                             button(context, "Save", () async {
-                              Provider.of<UserProvider>(context, listen: false)
+                             userprovider
                                   .storeData(
                                       userprovider.nameController.text,
                                       userprovider.ageController.text,
@@ -172,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               //  Provider.of<UserProvider>(context,listen: false).getData(nameController.text,ageController.text,selectGender,selectDepartment);
                               //  notify
 
-                              Navigator.of(context).push(MaterialPageRoute(
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
                                   builder: (context) => HomeScreen()));
                               // print(ref);
                               // }
@@ -487,4 +469,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // }
   
     
-  
